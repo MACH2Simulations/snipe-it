@@ -35,7 +35,7 @@ dir="{{ Helper::determineLanguageDirection() }}">
   <!-- Begin WEBNFC-->
  
   
-  <script> 
+    <script> 
       //Main Header//
   document.querySelector("#scanButton").onclick = async () => {
     const ndef = new NDEFReader();
@@ -130,7 +130,6 @@ dir="{{ Helper::determineLanguageDirection() }}">
   
   
   <!--end webnfc-->
-  
   
   
   
@@ -292,17 +291,24 @@ dir="{{ Helper::determineLanguageDirection() }}">
                             @endcan
 
                             @can('index', \App\Models\Asset::class)
+                          		<li><button type="Scan" id="scanButton" class="btn btn-success"><i class="fas fa-check icon-white" aria-hidden="true"></i>Scan</button>
+                          		</li>
                                 <li>
+                                  
                                     <form class="navbar-form navbar-left form-horizontal" role="search"
                                           action="{{ route('findbytag/hardware') }}" method="get">
+                                      	
                                         <div class="col-xs-12 col-md-12">
                                             <div class="col-xs-12 form-group">
+                                              
                                                 <label class="sr-only" for="tagSearch">
                                                     {{ trans('general.lookup_by_tag') }}
                                                 </label>
                                                 <input type="text" class="form-control" id="tagSearch" name="assetTag" placeholder="{{ trans('general.lookup_by_tag') }}">
-                                                <input type="hidden" name="topsearch" value="true" id="search">
-                                            </div>
+                                                <input type="hidden" name="topsearch" value="true" id="search"><!--WEBNFC SCAN BUTTON-->
+                                  		
+                                            </div> 
+                                          
                                             <div class="col-xs-1">
                                                 <button type="submit" id="topSearchButton" class="btn btn-primary pull-right">
                                                     <x-icon type="search" />
@@ -314,8 +320,7 @@ dir="{{ Helper::determineLanguageDirection() }}">
                                   
                                   
                                   
-                                  <!--WEBNFC SCAN BUTTON-->
-                                  <button type="Scan" id="scanButton" class="btn btn-success pull-right"><i class="fas fa-check icon-white" aria-hidden="true"></i> Scan</button>
+                                 
                                 </li>
                             @endcan
 
