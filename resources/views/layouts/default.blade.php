@@ -32,6 +32,114 @@ dir="{{ Helper::determineLanguageDirection() }}">
         window.Laravel = {csrfToken: '{{ csrf_token() }}'};
     </script>
 
+  <!-- Begin WEBNFC-->
+ 
+  
+  <script> 
+      //Main Header//
+  document.querySelector("#scanButton").onclick = async () => {
+    const ndef = new NDEFReader();
+    await ndef.scan();
+  ndef.addEventListener("reading", ({ message, serialNumber }) => {
+    //window.alert(`> Serial Number: ${serialNumber}`);
+    //window.alert(`> Records: (${message.records.length})`);
+    for (const record of message.records) {
+    console.log("Record type:  " + record.recordType);
+    console.log("MIME type:    " + record.mediaType);
+    console.log("Record id:    " + record.id);
+    switch (record.recordType) {
+      case "text":
+      const textDecoder = new TextDecoder(record.encoding);
+      const decodedData = textDecoder.decode(record.data);
+      //window.alert(decodedData);
+      document.querySelector('input[name="assetTag"]').value = decodedData;
+      case "url":
+        break;
+      default:
+        break;
+    }
+    ndef.addEventListener("readingerror", () => {
+      window.alert("Argh! Cannot read data from the NFC tag. Try another one? or Try again");
+    });
+  }
+});
+  };
+      
+//Create Asset//
+  document.querySelector("#scanButton1").onclick = async () => {
+    const ndef = new NDEFReader();
+    await ndef.scan();
+  ndef.addEventListener("reading", ({ message, serialNumber }) => {
+    //window.alert(`> Serial Number: ${serialNumber}`);
+    //window.alert(`> Records: (${message.records.length})`);
+    for (const record of message.records) {
+    console.log("Record type:  " + record.recordType);
+    console.log("MIME type:    " + record.mediaType);
+    console.log("Record id:    " + record.id);
+    switch (record.recordType) {
+      case "text":
+      const textDecoder = new TextDecoder(record.encoding);
+      const decodedData = textDecoder.decode(record.data);
+      window.alert(decodedData);
+      document.querySelector('input[name="asset_tags[1]"]').value = decodedData; 
+      case "url":
+        break;
+      default:
+        break;
+    }
+    ndef.addEventListener("readingerror", () => {
+      window.alert("Argh! Cannot read data from the NFC tag. Try another one? or Try again");
+    });
+  }
+});
+};
+ 
+      
+      //QuickScan//
+    document.querySelector("#scanButton2").onclick = async () => {
+        window.alert("moo");
+        const ndef = new NDEFReader();
+        await ndef.scan();
+        ndef.addEventListener("reading", ({ message, serialNumber }) => {
+    //window.alert(`> Serial Number: ${serialNumber}`);
+    //window.alert(`> Records: (${message.records.length})`);
+    for (const record of message.records) {
+    console.log("Record type:  " + record.recordType);
+    console.log("MIME type:    " + record.mediaType);
+    console.log("Record id:    " + record.id);
+    switch (record.recordType) {
+      case "text":
+      const textDecoder = new TextDecoder(record.encoding);
+      const decodedData = textDecoder.decode(record.data);
+      window.alert(decodedData);
+      document.querySelector('input[name="asset_tag"]').value = decodedData;
+      case "url":
+        break;
+      default:
+        break;
+    }
+    ndef.addEventListener("readingerror", () => {
+      window.alert("Argh! Cannot read data from the NFC tag. Try another one? or Try again");
+    });
+  }
+});
+  };
+      
+      
+  </script>
+  
+  
+  <!--end webnfc-->
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     {{-- stylesheets --}}
     <link rel="stylesheet" href="{{ url(mix('css/dist/all.css')) }}">
     @if (($snipeSettings) && ($snipeSettings->allow_user_skin==1) && Auth::check() && Auth::user()->present()->skin != '')
@@ -200,9 +308,14 @@ dir="{{ Helper::determineLanguageDirection() }}">
                                                     <x-icon type="search" />
                                                     <span class="sr-only">{{ trans('general.search') }}</span>
                                                 </button>
-                                            </div>
+                                          </div>
                                         </div>
-                                    </form>
+                                    </form>	
+                                  
+                                  
+                                  
+                                  <!--WEBNFC SCAN BUTTON-->
+                                  <button type="Scan" id="scanButton" class="btn btn-success pull-right"><i class="fas fa-check icon-white" aria-hidden="true"></i> Scan</button>
                                 </li>
                             @endcan
 

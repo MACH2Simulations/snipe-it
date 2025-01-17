@@ -14,14 +14,50 @@
     padding-left: 0px !important;
   }
 </style>
-
+<!-- webnfc-->
+<div>
+<script>
+  document.querySelector("#scanButton3").onclick = async () => {
+    const ndef = new NDEFReader();
+    await ndef.scan();
+  ndef.addEventListener("reading", ({ message, serialNumber }) => {
+    //window.alert(`> Serial Number: ${serialNumber}`);
+    //window.alert(`> Records: (${message.records.length})`);
+    for (const record of message.records) {
+    console.log("Record type:  " + record.recordType);
+    console.log("MIME type:    " + record.mediaType);
+    console.log("Record id:    " + record.id);
+    switch (record.recordType) {
+      case "text":
+      const textDecoder = new TextDecoder(record.encoding);
+      const decodedData = textDecoder.decode(record.data);
+      window.alert(decodedData);
+      document.querySelector('select2-search__field').value = decodedData;
+      case "url":
+        break;
+      default:
+        break;
+    }
+    ndef.addEventListener("readingerror", () => {
+      window.alert("Argh! Cannot read data from the NFC tag. Try another one? or Try again");
+    });
+  }
+});
+};
+  </script>
+<button type="Scan" id="scanButton3" class="btn btn-success"><i class="fas fa-check icon-white" aria-hidden="true"></i> Scan1</button>   <!-- webnfc-->    
+ </div> 
+  <!--end webnfc-->
 
 <div class="row">
   <!-- left column -->
-  <div class="col-md-7">
-    <div class="box box-default">
+  <div class="col-md-7">              
       <div class="box-header with-border">
         <h2 class="box-title"> {{ trans('admin/hardware/form.tag') }} </h2>
+        
+        <!--WEBNFC SCAN BUTTON-->
+              <button type="Scan" id="scanButton" class="btn btn-success pull-right"><i class="fas fa-check icon-white" aria-hidden="true"></i> Scan</button>
+    <div class="box box-default">
       </div>
       <div class="box-body">
         <form class="form-horizontal" method="post" action="" autocomplete="off">

@@ -15,28 +15,62 @@
             padding-left: 0px !important;
         }
     </style>
+<script>    document.querySelector("#scanButton2").onclick = async () => {
+        //window.alert("moo");
+        const ndef = new NDEFReader();
+        await ndef.scan();
+        ndef.addEventListener("reading", ({ message, serialNumber }) => {
+    //window.alert(`> Serial Number: ${serialNumber}`);
+    //window.alert(`> Records: (${message.records.length})`);
+    for (const record of message.records) {
+    console.log("Record type:  " + record.recordType);
+    console.log("MIME type:    " + record.mediaType);
+    console.log("Record id:    " + record.id);
+    switch (record.recordType) {
+      case "text":
+      const textDecoder = new TextDecoder(record.encoding);
+      const decodedData = textDecoder.decode(record.data);
+      //window.alert(decodedData);
+      document.querySelector('input[name="asset_tag"]').value = decodedData;
+      case "url":
+        break;
+      default:
+        break;
+    }
+    ndef.addEventListener("readingerror", () => {
+      window.alert("Argh! Cannot read data from the NFC tag. Try another one? or Try again");
+    });
+  }
+});
+  };</script>
 
-    
-
-    <div class="row">
+   
+    <div class="row"> 
+      
     {{ Form::open(['method' => 'POST', 'class' => 'form-horizontal', 'role' => 'form', 'id' => 'checkin-form' ]) }}
         <!-- left column -->
         <div class="col-md-6">
+          
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h2 class="box-title"> {{ trans('admin/hardware/general.bulk_checkin') }} </h2>
-                </div>
+                </div> 
+             
+              
                 <div class="box-body">
                     {{csrf_field()}}
-
+ 					
                     <!-- Asset Tag -->
+                  	
                     <div class="form-group {{ $errors->has('asset_tag') ? 'error' : '' }}">
                         {{ Form::label('asset_tag', trans('general.asset_tag'), array('class' => 'col-md-3 control-label', 'id' => 'checkin_tag')) }}
                         <div class="col-md-9">
+                         	
                             <div class="input-group col-md-11 required">
                                 <input type="text" class="form-control" name="asset_tag" id="asset_tag" value="{{ old('asset_tag') }}" required>
-
+								<button type="Scan" id="scanButton2" class="btn btn-success"><i class="fas fa-check icon-white" aria-hidden="true"></i> Scan </button>   <!-- webnfc--> 
                             </div>
+                         
                             {!! $errors->first('asset_tag', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
                         </div>
                     </div>
